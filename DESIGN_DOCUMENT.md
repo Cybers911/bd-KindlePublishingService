@@ -40,7 +40,8 @@ customers to ensure they love our product.
 
 *Figure 1: Diagram showing the architecture of the Kindle Publishing Service. A user connects to an
 Amazon Kindle Publishing Client. The Client makes API calls to the Kindle Publishing Service first connecting
-with an AWS load balancer. This forwards the requests to ECS, which connects to a persistent data store for catalog
+with an AWS load balancer. This forwards the requests to ECS, which connects to a persistent data store
+for catalog
 and publishing information Responses then flow bck to the Kindle Publishing Client.*
 
 ## Kindle Publishing Service API Implementation Notes

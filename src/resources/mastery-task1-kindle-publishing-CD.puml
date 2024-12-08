@@ -1,1 +1,115 @@
-PARTICIPANTS: use this file for creating the class diagram in mastery task 01
+@startuml
+class GetBookActivity {
+- recommendationServiceClient : RecommendationsServiceClient
+- catalogDao : CatalogDao
+
++ execute(request : GetBookRequest) : GetBookResponse
+}
+RecommendationsServiceClient <-- GetBookActivity
+CatalogDao <-- GetBookActivity
+
+class SubmitBookForPublishingActivity {
+- publishingStatusDao : PublishingStatusDao
+
++ execute(request : SubmitBookForPublishingRequest) : SubmitBookForPublishingResponse
+}
+PublishingStatusDao <-- SubmitBookForPublishingActivity
+
+class RemoveBookFromCatalogActivity {
++ execute(removeBookFromCatalogRequest : RemoveBookFromCatalogRequest) : RemoveBookFromCatalogResponse
+}
+CatalogDao <-- RemoveBookFromCatalogActivity
+
+class RecommendationsServiceClient {
+- recommendationsService : RecommendationsService
+
++ getBookRecommendations(genre : BookGenre) : List<BookRecommendation>
+}
+
+class PublishingStatusDao {
+- ADDITIONAL_NOTES_PREFIX : String
+- dynamoDbMapper : DynamoDBMapper
+
++ setPublishingStatus(publishingRecordId : String, publishingRecordStatus : PublishingRecordStatus, bookId : String) : PublishingStatusItem
++ setPublishingStatus(publishingRecordId : String, publishingRecordStatus: PublishingRecordStatus, bookId : String, message : String) : PublishingStatusItem
+}
+PublishingStatusItem -- PublishingStatusDao
+
+class CatalogDao {
+- dynamoDbMapper : DynamoDBMapper
+
++ getBookFromCatalog(bookId : String) : CatalogItemVersion
+- getLatestVersionOfBook(bookId : String) : CatalogItemVersion
+}
+CatalogItemVersion -- CatalogDao
+
+class PublishingStatusItem {
+- @DynamoDBHashKey publishingRecordId : String
+- @DynamoDBRangeKey status : PublishingRecordStatus
+- statusMessage : String
+- bookId : String
+
++ getPublishingRecordId() : String
++ setPublishingRecordId(publishingRecordId : String)
++ getStatus() : PublishingRecordStatus
++ setStatus(status : PublishingRecordStatus)
++ getStatusMessage() : String
++ setStatusMessage(statusMessage : String)
++ getBookId() : String
++ setBookId(bookId : String)
+}
+
+class CatalogItemVersion {
+- @DynamoDBHashKey bookId : String
+- @DynamoDBRangeKey version : int
+- inactive : boolean
+- title : String
+- author : String
+- text : String
+- genre : BookGenre
+
++ getBookId() : String
++ setBookId(bookId : String)
++ getVersion() : int
++ setVersion(version : int)
++ getTitle() : String
++ setTitle(title : String)
++ getAuthor() : String
++ setAuthor(author : String)
++ getText() : String
++ setText(text : String)
++ getGenre() : BookGenre
++ setGenre(genre : BookGenre)
++ isInactive() : boolean
++ setInactive(active : boolean)
+
++ toString() : String
++ equals(o : Object) : boolean
++ hashCode() : int
+}
+
+enum PublishingRecordStatus {
+QUEUED
+IN_PROGRESS
+FAILED
+SUCCESSFUL
+}
+PublishingRecordStatus -- PublishingStatusItem
+
+class PublishingStatusNotFoundException {
+- serialVersionUID : long
+
++ PublishingStatusNotFoundException(message : String)
++ PublishingStatusNotFoundException(message : String, cause : Throwable)
+}
+
+class BookNotFoundException {
+- serialVersionUID : long
+
++ BookNotFoundException(message : String)
++ BookNotFoundException(message : String, cause : Throwable)
+}
+
+BookNotFoundException -- CatalogDao
+PublishingStatusNotFoundException -- PublishingStatusDao
+@enduml

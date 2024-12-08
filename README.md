@@ -28,7 +28,8 @@ to add a book to the catalog.
 As a member of the Amazon Kindle team, you will be launching a new service that allows our
 publishing department to convert books into a digital format.
 
-The overview, architecture, and implementation are covered in the [design document here](DESIGN_DOCUMENT.md). Almost all major pieces of software at Amazon first go through an intensive design
+The overview, architecture, and implementation are covered in the [design document here](DESIGN_DOCUMENT.md). Almost all major 
+pieces of software at Amazon first go through an intensive design
 review to answer the question "Are we building the right thing for our customer?".
 
 By working on the preparedness and mastery tasks for this project, you will finish the
@@ -49,7 +50,8 @@ the request as it continues to receive other, new requests. The service is worki
 concurrently - we can think of this as multi-tasking for now. We’ll spend a lot more time in 
 this unit and future units digging into the concept of concurrency much more deeply.
 
-Examine the folders in the starter project to be sure you are familiar with their contents.  Everything you need to start the project and create/populate your DynamoDB tables has been provided.
+Examine the folders in the starter project to be sure you are familiar with their contents.  Everything you 
+need to start the project and create/populate your DynamoDB tables has been provided.
 
 #### Remember: U.P.E.R.
 

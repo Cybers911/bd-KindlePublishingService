@@ -37,24 +37,29 @@ Update `src/resources/mastery-task1-remove-book-SD.puml` with a sequence diagram
 **Recall:** [We can use PlantUML’s `alt` syntax](http://wiki.plantuml.net/site/sequence-diagram#grouping_message) to
 represent if/else cases for validation.
 
-**Recall:** We can add the `@DynamoDBHashKey` and `@DynamoDBRangeKey` annotations to the class diagram. Here’s an
+**Recall:** We can add the `@DynamoDBHashKey` and `@DynamoDBRangeKey` annotations to the class diagram. Here’s
+an
 [example format](https://plantuml.corp.amazon.com/plantuml/form/encoded.html#encoded=SoWkIImgAStDuKhEIImkLd3ApyzMgEPoSAdCIypDTt7oI2pEy4wjL4W2YdkcA5Wf19SKPUQb8nG49UQbfu9KbAKM5MVcvm6LUEQLfAQd5d7LSZcavgK0pGO0).
 
 
 #### Milestone 2: Implement RemoveBookFromCatalog
 
 We already got a head start on this. You’ll need to now add some logic to do a soft delete. We don’t want to
-lose previous versions of the book that we have sold to customers. Instead, we’ll mark the current version as inactive
+lose previous versions of the book that we have sold to customers. Instead, we’ll mark the current version as
+inactive
 so that it can never be returned by the `GetBook` operation, essentially deleted.
 
-We’ll need to update our `CatalogDao` to implement this “delete” functionality and use that in our `Activity` class.
+We’ll need to update our `CatalogDao` to implement this “delete” functionality and use that in our `Activity` 
+class.
 
 When writing unit tests for your new logic in `CatalogDao`, we encourage you to use
-[ArgumentCaptor](https://site.mockito.org/javadoc/current/org/mockito/ArgumentCaptor.html)s. To see one in action in
+[ArgumentCaptor](https://site.mockito.org/javadoc/current/org/mockito/ArgumentCaptor.html)s. To see one
+in action in
 the project take a look at the `getBookFromCatalog_oneVersion_returnVersion1` unit test in the
 `CatalogDaoTest` class.
 
-We’ve generated some catalog data and put it in your CatalogItemVersions DynamoDb table. You can find a book there to
+We’ve generated some catalog data and put it in your CatalogItemVersions DynamoDb table. You can find a book 
+there to
 remove, or feel free to add any additional test data.
 
 Run `MasteryTaskOneDesignTests` to make sure all tests for this task are passing.
