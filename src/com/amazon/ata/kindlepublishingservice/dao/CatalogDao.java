@@ -66,4 +66,11 @@ public class CatalogDao {
         return book;
 
     }
+
+public void validateBookExists(String bookId) {
+        CatalogItemVersion book = getLatestVersionOfBook(bookId);
+            if (book == null || book.isInactive()) {
+                throw new BookNotFoundException(String.format("No book found for id: %s", bookId));
+            }
+}
 }
