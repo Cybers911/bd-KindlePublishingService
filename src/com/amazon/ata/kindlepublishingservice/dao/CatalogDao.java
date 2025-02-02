@@ -73,4 +73,70 @@ public void validateBookExists(String bookId) {
                 throw new BookNotFoundException(String.format("No book found for id: %s", bookId));
             }
 }
-}
+
+/**
+ *Adds a new book to the CatalogItemVersionTable.
+ *If the request is updating an exixting book, then the corresponding book id should be provided.
+ * set the previous active version of book to false andand increment the version by 1
+ * if the request is a previouslyexixting book butis set to inactive then return BookNotFoundException
+ *If the equest does not exist in the CatalogItemVersionTable then create a new book then add a new
+ * book to the Table with the version set as 1
+ * @param KindleFormattedBook book the book to be added or updated.to the CatalogItemVersionTable.
+ *                            If the book is being updated, the bookId should be provided.
+ *                            If the book is being created, the bookId should be null.
+ *                            If the book is being set to inactive, the bookId should be provided.
+ *                            If the book is being created, the version should be set as 1.
+ *                            If the book is being updated, the version should be incremented by 1.
+ * @return the updated CatalogItemVersion.
+ *
+ *
+ */
+
+   public CatalogItemVersion createOrUpdateBook(KindleFormattedBook kindleFormattedBook) {
+        String bookId = kindleFormattedBook.getBookId();
+        CatalogItemVersion newCatalogItem = new CatalogItemVersion();
+
+
+            if (bookId == null) {
+                newCatalogItem.setBookId(KindlePublishingUtils.generateBookId());
+                newCatalogItem.setTitle(kindleFormattedBook.getTitle());
+                newCatalogItem.setText(kindleFormattedBook.getText());
+                newCatalogItem.setAuthor(kindleFormattedBook.getAuthor());
+                newCatalogItem.setGenre(kindleFormattedBook.getGenre());
+                newCatalogItem.setInactive(false);
+                newCatalogItem.setVersion(1);
+
+                dynamoDbMapper.save(newCatalogItem);
+                return newCatalogItem;
+
+            }
+
+                //if this throws a BookNotFoundException, it's because the book is inactive
+                CatalogItemVersion catalogItemVersion = getBookFromCatalog(bookId);
+
+                // if this request is updating an existing book, increment the version by 1
+                // previously active version of the book will be marked inactive.
+                catalogItemVersion.setInactive(true);
+
+                newCatalogItem.setBookId(bookId);
+                newCatalogItem.setVersion(catalogItemVersion.getVersion() + 1);
+                newCatalogItem.setInactive(false);
+                newCatalogItem.setText(catalogItemVersion.getText());
+                newCatalogItem.setAuthor(catalogItemVersion.getAuthor());
+                newCatalogItem.setGenre(catalogItemVersion.getGenre());
+                newCatalogItem.setTitle(catalogItemVersion.getTitle());
+
+                dynamoDbMapper.save(catalogItemVersion);
+                dynamoDbMapper.save(newCatalogItem);
+
+                return newCatalogItem;
+
+
+            }
+   }
+
+
+
+
+
+
